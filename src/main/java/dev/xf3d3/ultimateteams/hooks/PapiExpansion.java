@@ -36,114 +36,90 @@ public class PapiExpansion extends PlaceholderExpansion {
     }
 
     @Override
-    public String onRequest(OfflinePlayer player, String params) {;
-        Team teamOwner = plugin.getTeamStorageUtil().findTeamByOfflineOwner(player);
-        Team teamMember = plugin.getTeamStorageUtil().findTeamByOfflinePlayer(player);
+    public String onRequest(OfflinePlayer player, @NotNull String params) {
+        Team team = plugin.getTeamStorageUtil().findTeamByOfflineOwner(player);
+        if (team == null) {
+            team = plugin.getTeamStorageUtil().findTeamByOfflinePlayer(player);
+        }
 
         if (params.equalsIgnoreCase("teamName")) {
-            if (teamOwner != null) {
-                return Utils.Color(teamOwner.getTeamFinalName() + "&r ");
-            } else if (teamMember != null){
-                return Utils.Color(teamMember.getTeamFinalName() + "&r ");
-            } else {
-                return "";
+            if (team != null) {
+                return Utils.Color(team.getTeamFinalName() + "&r ");
             }
+
+            return "";
         }
 
         if (params.equalsIgnoreCase("teamPrefix")) {
             String openBracket = plugin.getSettings().getPrefixBracketsOpening();
             String closeBracket = plugin.getSettings().getPrefixBracketsClosing();
 
-            if (teamOwner != null){
+            if (team != null) {
+                StringBuilder tmp = new StringBuilder();
                 if (plugin.getSettings().addPrefixBrackets()) {
-                    if (plugin.getSettings().addSpaceAfterPrefix()) {
-                        return Utils.Color(openBracket + teamOwner.getTeamPrefix() + closeBracket +"&r ");
-                    } else {
-                        return Utils.Color(openBracket + teamOwner.getTeamPrefix() + closeBracket +"&r");
-                    }
-                } else {
-                    if (plugin.getSettings().addSpaceAfterPrefix()){
-                        return Utils.Color(teamOwner.getTeamPrefix() + "&r ");
-                    } else {
-                        return Utils.Color(teamOwner.getTeamPrefix() + "&r");
-                    }
+                    tmp.append(openBracket);
                 }
-            } else if (teamMember != null) {
+
+                tmp.append(team.getTeamPrefix());
+
                 if (plugin.getSettings().addPrefixBrackets()) {
-                    if (plugin.getSettings().addSpaceAfterPrefix()) {
-                        return Utils.Color(openBracket + teamMember.getTeamPrefix() + closeBracket +"&r ");
-                    } else {
-                        return Utils.Color(openBracket + teamMember.getTeamPrefix() + closeBracket +"&r");
-                    }
-                } else {
-                    if (plugin.getSettings().addSpaceAfterPrefix()){
-                        return Utils.Color(teamMember.getTeamPrefix() + "&r ");
-                    } else {
-                        return Utils.Color(teamMember.getTeamPrefix() + "&r");
-                    }
+                    tmp.append(closeBracket);
                 }
-            } else {
-                return "";
+                tmp.append("&r");
+                if (plugin.getSettings().addSpaceAfterPrefix()) {
+                    tmp.append(' ');
+                }
+
+                return tmp.toString();
             }
+
+            return "";
         }
 
         if (params.equalsIgnoreCase("friendlyFire")) {
-            if (teamOwner != null) {
-                return String.valueOf(teamOwner.isFriendlyFireAllowed());
-            }else if (teamMember != null) {
-                return String.valueOf(teamMember.isFriendlyFireAllowed());
-            }else {
-                return "";
+            if (team != null) {
+                return String.valueOf(team.isFriendlyFireAllowed());
             }
+
+            return "";
         }
 
         if (params.equalsIgnoreCase("teamHomeSet")) {
-            if (teamOwner != null) {
-                return String.valueOf(plugin.getTeamStorageUtil().isHomeSet(teamOwner));
-            } else if (teamMember != null) {
-                return String.valueOf(plugin.getTeamStorageUtil().isHomeSet(teamMember));
-            } else {
-                return "";
+            if (team != null) {
+                return String.valueOf(plugin.getTeamStorageUtil().isHomeSet(team));
             }
+
+            return "";
+
         }
 
         if (params.equalsIgnoreCase("teamMembersSize")) {
-            if (teamOwner != null){
-                return String.valueOf(teamOwner.getTeamMembers().size());
-            } else if (teamMember != null){
-                return String.valueOf(teamMember.getTeamMembers().size());
-            } else {
-                return "";
+            if (team != null) {
+                return String.valueOf(team.getTeamMembers().size());
             }
+
+            return "";
+
         }
 
         if (params.equalsIgnoreCase("teamAllySize")) {
-
-            if (teamOwner != null) {
-                return String.valueOf(teamOwner.getTeamAllies().size());
-            } else if (teamMember != null) {
-                return String.valueOf(teamMember.getTeamAllies().size());
-            } else {
-                return "";
+            if (team != null) {
+                return String.valueOf(team.getTeamAllies().size());
             }
+
+            return "";
         }
 
         if (params.equalsIgnoreCase("teamEnemySize")) {
-            if (teamOwner != null) {
-                return String.valueOf(teamOwner.getTeamEnemies().size());
-            } else if (teamMember != null) {
-                return String.valueOf(teamMember.getTeamEnemies().size());
-            } else {
-                return "";
+            if (team != null) {
+                return String.valueOf(team.getTeamEnemies().size());
             }
+
+            return "";
         }
 
         if (params.equalsIgnoreCase("isInTeam")) {
-            if (teamOwner != null || teamMember != null) {
-                return String.valueOf(true);
-            } else {
-                return String.valueOf(false);
-            }
+            return String.valueOf(team != null);
         }
 
         return null;
