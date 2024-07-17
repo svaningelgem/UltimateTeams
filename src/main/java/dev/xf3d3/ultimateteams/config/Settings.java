@@ -225,6 +225,9 @@ public class Settings {
     @YamlKey("general.developer-debug-mode")
     private boolean debugMode = false;
 
+    @YamlComment("Which seperator to use for PlaceholderAPI arguments")
+    @YamlKey("placeholderapi.seperator")
+    private String seperator = "_";
 
     private Settings() {
     }
@@ -430,5 +433,7 @@ public class Settings {
     public boolean debugModeEnabled() {
         return debugMode;
     }
+
+    public String getSeperator() { return seperator; }
 
 }

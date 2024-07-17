@@ -197,4 +197,36 @@ public class Team {
     public void setTeamHomePitch(float teamHomePitch){
         this.teamHomePitch = teamHomePitch;
     }
+
+    public boolean isMyTeam(Team otherTeam) {
+        return otherTeam != null && teamFinalName.equals(otherTeam.teamFinalName);
+    }
+
+    public boolean isMyEnemy(Team otherTeam) {
+        if (otherTeam == null || teamFinalName.equals(otherTeam.teamFinalName)) {
+            return false;
+        }
+
+        return teamEnemies.contains(otherTeam.teamFinalName);
+    }
+
+    public boolean isMyAlly(Team otherTeam) {
+        if (otherTeam == null || teamFinalName.equals(otherTeam.teamFinalName)) {
+            return false;
+        }
+
+        return teamAllies.contains(otherTeam.teamFinalName);
+    }
+
+    public boolean isNeutral(Team otherTeam) {
+        if (otherTeam == null) {
+            return true;
+        }
+
+        if (teamFinalName.equals(otherTeam.teamFinalName)) {
+            return false;
+        }
+
+        return !teamAllies.contains(otherTeam.teamFinalName) && !teamEnemies.contains(otherTeam.teamFinalName);
+    }
 }
